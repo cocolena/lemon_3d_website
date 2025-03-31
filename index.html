@@ -23,8 +23,8 @@
         scene.add( ambientLight );
 
         // 添加方向光
-        const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-        directionalLight.position.set( 0, 1, 1 ).normalize();
+        const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
+        directionalLight.position.set( 1, 1, 1 ).normalize();
         scene.add( directionalLight );
 
         // 加載 3D 模型 (請將 'your_model.glb' 替換為您的模型檔案路徑)
