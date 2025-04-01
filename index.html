@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>我的 3D 模型</title>
+    <title>My 3D Model with Manual Rotation</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -9,6 +9,7 @@
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         // 初始化場景、相機和渲染器
@@ -16,35 +17,45 @@
         const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setClearColor(0x000000); // 設定背景顏色為黑色
         document.body.appendChild( renderer.domElement );
 
         // 添加環境光
-        const ambientLight = new THREE.AmbientLight( 0xffffff, 0.8 );
+        const ambientLight = new THREE.AmbientLight( 0xffffff, 0.5); // 設定環境光強度
         scene.add( ambientLight );
 
-        // 添加方向光
-        const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
-        directionalLight.position.set( 1, 1, 1 ).normalize();
+        // 添加強度更高的方向光
+        const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 ); // 增加方向光強度
+        directionalLight.position.set( 2, 3, 2 ).normalize(); // 讓光源有一個更好的位置
         scene.add( directionalLight );
-        
-        let model; 
-        
+
+        // 相機位置
+        camera.position.set( 0, 1, 5 ); // 相機稍微移遠，能夠看到模型
+
+        // 初始化控制器 (OrbitControls)
+        const controls = new THREE.OrbitControls(camera, renderer.domElement); // 讓相機可以旋轉、縮放
+
+        let model;
+
+        // 加載 3D 模型
         const loader = new THREE.GLTFLoader();
-        loader.load('lemon.glb', function ( gltf ) {
+        loader.load( 'lemon.glb', function ( gltf ) {
             model = gltf.scene;
+            scene.add( model );
+            // 設定模型的大小
             model.scale.set(0.1, 0.1, 0.1);
-            scene.add(model);
-            camera.position.z = 5;
-        });
+        }, undefined, function ( error ) {
+            console.error( error );
+        } );
 
+        // 渲染循環
         function animate() {
-            requestAnimationFrame(animate);
-    
-            if (model) {
-                model.rotation.y += 0.01; // 旋轉模型
-            }
+            requestAnimationFrame( animate );
 
-            renderer.render(scene, camera);
+            // 更新 OrbitControls
+            controls.update(); // 如果相機有變化（例如縮放），更新控制器
+
+            renderer.render( scene, camera );
         }
         animate();
     </script>
