@@ -30,7 +30,7 @@
         let model; 
         
         const loader = new THREE.GLTFLoader();
-        loader.load('lemon.glb', function ( gltf ) {
+        loader.load('https://github.com/cocolena/lemon_3d_website/blob/main/index.html', function ( gltf ) {
             model = gltf.scene;
             model.scale.set(0.1, 0.1, 0.1);
             scene.add(model);
